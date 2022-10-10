@@ -57,13 +57,13 @@ repo:init auth ## Setup Artifact Registry Docker Repo in the Deployment Project
 	$(suppress_output)echo "Building Artifact Repo to Store Docker Image of Airflow Test Container...."
 	$(suppress_output)gcloud artifacts repositories create ${ARTIFACT_REGISTRY_NAME} --repository-format=docker --location=${TF_VAR_location}
 
-projects: ## Builds the Dev, Test and Prod Projects and Enable APIs
+projects:init auth ## Builds the Dev, Test and Prod Projects and Enable APIs
 	$(call run, bash /workspace_stg/infra/tf_utils.sh \
 	apply \
 	infra/projects \
  	${DEPLOYMENT_PROJECT_NUMBER})
 
-triggers: ## Build CICD triggers against your GitHub Repo
+triggers:init auth ## Build CICD triggers against your GitHub Repo
 	$(suppress_output)sed -i '' "s/TF_VAR_location/${TF_VAR_location}/g" $(PWD)/cloudbuild/pre-merge.yaml
 	$(suppress_output)sed -i '' "s/TF_VAR_location/${TF_VAR_location}/g" $(PWD)/cloudbuild/on-merge.yaml
 	$(call run, bash /workspace_stg/infra/tf_utils.sh \
@@ -71,7 +71,7 @@ triggers: ## Build CICD triggers against your GitHub Repo
 	infra/triggers \
 	${DEPLOYMENT_PROJECT_NUMBER})
 
-del-triggers: ## Destroy your Build Triggers
+del-triggers:init auth ## Destroy your Build Triggers
 	$(suppress_output)sed -i '' "s/TF_VAR_location/${TF_VAR_location}/g" $(PWD)/cloudbuild/pre-merge.yaml
 	$(suppress_output)sed -i '' "s/TF_VAR_location/${TF_VAR_location}/g" $(PWD)/cloudbuild/on-merge.yaml
 	$(call run, bash /workspace_stg/infra/tf_utils.sh \
