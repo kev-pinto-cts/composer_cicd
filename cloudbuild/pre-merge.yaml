@@ -11,9 +11,10 @@ steps:
       echo "***********************************************************************************************************************"
 
 - id: 'build-test-container'
-  name: 'gcr.io/kaniko-project/executor:latest --dockerfile=./cloudbuild/Dockerfile'
+  name: 'gcr.io/kaniko-project/executor:latest'
   waitFor: [ '-' ]
   args:
+    - --dockerfile=./cloudbuild/Dockerfile
     - --destination=${_COMPOSER_LOCATION}-docker.pkg.dev/${PROJECT_ID}/airflow-test-container/cicd
     - --cache=true
     - --cache-ttl=240h
