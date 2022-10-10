@@ -2,12 +2,12 @@ from pathlib import Path
 
 # Third Party Imports
 from airflow.decorators import dag
-from airflow.utils.dates import days_ago
+import pendulum
 from airflow.operators.empty import EmptyOperator
 from airflow.operators.bash import BashOperator
 
 default_args = {
-    'start_date': days_ago(1),
+    'start_date': pendulum.today('UTC').add(days=-1),
     'catchup': False,
     'max_active_runs': 1,
     'tags': ["BAU"],
