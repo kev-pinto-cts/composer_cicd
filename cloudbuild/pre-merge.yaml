@@ -14,6 +14,7 @@ steps:
   name: 'gcr.io/kaniko-project/executor:latest'
   waitFor: [ '-' ]
   args:
+    - --dockerfile cloudbuild/Dockerfile
     - --destination=${_COMPOSER_LOCATION}-docker.pkg.dev/${PROJECT_ID}/airflow-test-container/cicd
     - --cache=true
     - --cache-ttl=240h
