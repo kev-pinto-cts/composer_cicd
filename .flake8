@@ -1,5 +1,6 @@
 [flake8]
-ignore = E241, E712, W504, E501
+ignore = E241, E712, W504
+max-line-length = 160
 exclude =
     setup.py,
     # No need to traverse our git directory
