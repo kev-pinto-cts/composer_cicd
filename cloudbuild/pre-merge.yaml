@@ -19,6 +19,13 @@ steps:
     - --cache=true
     - --cache-ttl=240h
 
+- id: 'lint'
+  name: '${_COMPOSER_LOCATION}-docker.pkg.dev/${PROJECT_ID}/airflow-test-container/cicd:latest'
+  waitFor: [ 'build-test-container' ]
+  entrypoint: 'sh'
+  args:
+    - 'flake8'
+
 - id: 'run-unit-test'
   name: '${_COMPOSER_LOCATION}-docker.pkg.dev/${PROJECT_ID}/airflow-test-container/cicd:latest'
   waitFor: [ 'build-test-container' ]
