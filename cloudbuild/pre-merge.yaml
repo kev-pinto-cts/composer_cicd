@@ -24,7 +24,9 @@ steps:
   waitFor: [ 'build-test-container' ]
   entrypoint: 'sh'
   args:
-    - 'flake8'
+    - '-c'
+    - |
+      flake8
 
 - id: 'run-unit-test'
   name: '${_COMPOSER_LOCATION}-docker.pkg.dev/${PROJECT_ID}/airflow-test-container/cicd:latest'
