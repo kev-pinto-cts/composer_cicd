@@ -63,6 +63,12 @@ projects:init auth ## Builds the Dev, Test and Prod Projects and Enable APIs
 	infra/projects \
  	${DEPLOYMENT_PROJECT_NUMBER})
 
+del-projects:init auth ## Drops the Dev, Test and Prod Projects
+	$(call run, bash /workspace_stg/infra/tf_utils.sh \
+	destroy \
+	infra/projects \
+ 	${DEPLOYMENT_PROJECT_NUMBER})
+
 triggers:init auth ## Build CICD triggers against your GitHub Repo
 	$(suppress_output)sed -i '' "s/TF_VAR_location/${TF_VAR_location}/g" $(PWD)/cloudbuild/pre-merge.yaml
 	$(suppress_output)sed -i '' "s/TF_VAR_location/${TF_VAR_location}/g" $(PWD)/cloudbuild/on-merge.yaml
@@ -84,10 +90,11 @@ deploy: ## Deploy Dags to Your Dev Project -- This Runs your Unit tests first
 	$(suppress_output)echo ${DAG_BUCKET}
 	$(call run, \
 	  pytest ${WORKDIR}/tests \
-	  && rm -rf ${WORKDIR}/dags/__pycache__ \
-	  && rm -f ${WORKDIR}/dags/.DS_Store \
-	  && rm -f ${WORKDIR}/dags/*.pyc \
-	  && gsutil -m rsync -r dags/  ${DAG_BUCKET})
+	  && gsutil -m rsync -r dags/  ${DAG_BUCKET} \
+	  && gsutil rm -rf ${WORKDIR}/dags/__pycache__ \
+	  && gsutil rm -f ${WORKDIR}/dags/.DS_Store \
+	  && gsutil rm -f ${WORKDIR}/dags/*.pyc
+  )
 
 tests: ## Run your Airflow Unit Tests -- Make sure you run `make init` at least once before running this
 	$(call run, pytest ${WORKDIR}/tests)
