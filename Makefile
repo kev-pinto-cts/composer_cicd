@@ -82,7 +82,12 @@ del-triggers:init auth ## Destroy your Build Triggers
 deploy: ## Deploy Dags to Your Dev Project -- This Runs your Unit tests first
 	$(suppress_output)gcloud config set project ${TF_VAR_dev_project}
 	$(suppress_output)echo ${DAG_BUCKET}
-	$(call run, pytest ${WORKDIR}/tests && rm -rf ${WORKDIR}/dags/__pycache__ && rm -f ${WORKDIR}/dags/.DS_Store && rm -f ${WORKDIR}/dags/*.pyc && gsutil -m rsync -r dags/  ${DAG_BUCKET})
+	$(call run, \
+	  pytest ${WORKDIR}/tests \
+	  && rm -rf ${WORKDIR}/dags/__pycache__ \
+	  && rm -f ${WORKDIR}/dags/.DS_Store \
+	  && rm -f ${WORKDIR}/dags/*.pyc \
+	  && gsutil -m rsync -r dags/  ${DAG_BUCKET})
 
 tests: ## Run your Airflow Unit Tests -- Make sure you run `make init` at least once before running this
 	$(call run, pytest ${WORKDIR}/tests)

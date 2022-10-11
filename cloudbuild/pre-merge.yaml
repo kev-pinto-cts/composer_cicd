@@ -28,14 +28,14 @@ steps:
     - |
       flake8
 
-- id: 'detect-secrets'
+- id: 'pre-commit-checks'
   name: '${_COMPOSER_LOCATION}-docker.pkg.dev/${PROJECT_ID}/airflow-test-container/cicd:latest'
   waitFor: [ 'build-test-container' ]
   entrypoint: 'sh'
   args:
     - '-c'
     - |
-      detect-secrets scan > .secrets.baseline && detect-secrets scan --baseline .secrets.baseline
+      pre-commit run --all-files
 
 - id: 'run-unit-test'
   name: '${_COMPOSER_LOCATION}-docker.pkg.dev/${PROJECT_ID}/airflow-test-container/cicd:latest'
