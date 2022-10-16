@@ -48,7 +48,7 @@ steps:
 
 - id: 'run-int-test'
   name: '${_COMPOSER_LOCATION}-docker.pkg.dev/${PROJECT_ID}/airflow-test-container/cicd:latest'
-  waitFor: [ '-' ]
+  waitFor: [ 'build-test-container','run-unit-test' ]
   entrypoint: 'sh'
   args:
   - '-c'
