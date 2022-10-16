@@ -6,7 +6,7 @@ steps:
   args:
     - '-c'
     - |
-      pwd
+      cat ./config/env_mapper.txt
 options:
   dynamic_substitutions: true
 substitutions:
