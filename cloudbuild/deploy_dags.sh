@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
 BRANCH=$1
+gcloud components install gke-gcloud-auth-plugin --quiet
 
 project_to_branch_map=($(cat /workspace/config/env_mapper.txt))
 for mapping in ${project_to_branch_map[@]}; do
@@ -10,8 +11,9 @@ for mapping in ${project_to_branch_map[@]}; do
   echo "${project_id}--${dag_bucket}--${branch}"
 
   if [ ${BRANCH} == ${branch} ]; then
+    echo "Deploying to Project -- ${project_id}"
     target=${dag_bucket}/dags
     gcloud config set project ${project_id}
-    gsutil rsync -r -d dags/ ${target}/
+    gsutil -m rsync -r -d dags/ ${target}/
   fi
 done

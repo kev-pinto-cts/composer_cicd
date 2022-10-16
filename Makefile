@@ -36,7 +36,7 @@ init: ## This will build the Local Dev Container
 	$(suppress_output)gcloud components update
 	$(suppress_output)docker build . -t ${BUILD_CONTAINER}:${BUILD_CONTAINER_TAG} -f cloudbuild/Dockerfile
 
-bootstrap:init ## Creates a Bucket to Store Terraform State -- Do this FIRST !! -- Also, Run this once only
+bootstrap: auth## Creates a Deployment Project and Bucket to Store Terraform State -- Do this FIRST !! -- Also, Run this once only
 	$(suppress_output)echo "Creating Deployment Project ${TF_VAR_deployment_project}"
 	#$(suppress_output)gcloud projects create ${TF_VAR_deployment_project} --folder=${TF_VAR_folder}
 	$(suppress_output)gcloud beta billing projects link ${TF_VAR_deployment_project} --billing-account=${TF_VAR_billing_account}
@@ -53,24 +53,25 @@ bootstrap:init ## Creates a Bucket to Store Terraform State -- Do this FIRST !! 
 	$(suppress_output)echo "Creating Terraform State Bucket ${TF_VAR_tfstate_bucket}...."
 	#$(call run, gsutil mb -c standard -l ${TF_VAR_location} -p ${TF_VAR_deployment_project} gs://${TF_VAR_tfstate_bucket})
 
-repo:init auth ## Setup Artifact Registry Docker Repo in the Deployment Project
+repo: ## Setup Artifact Registry Docker Repo in the Deployment Project, Do this after bootstrap
 	$(suppress_output)gcloud config set project ${TF_VAR_deployment_project}
 	$(suppress_output)echo "Building Artifact Repo to Store Docker Image of Airflow Test Container...."
 	$(suppress_output)gcloud artifacts repositories create ${ARTIFACT_REGISTRY_NAME} --repository-format=docker --location=${TF_VAR_location}
 
-projects:init auth ## Builds the Dev, Test and Prod Projects and Enable APIs
+projects: ## Builds the Dev, Test and Prod Projects - Enable APIs and Setup Composer, Run this after make repo
 	$(call run, bash /workspace_stg/infra/tf_utils.sh \
 	apply \
 	infra/projects \
  	${DEPLOYMENT_PROJECT_NUMBER})
 
-del-projects:init auth ## Drops the Dev, Test and Prod Projects
+del-projects: ## Drops the Dev, Test and Prod Projects
 	$(call run, bash /workspace_stg/infra/tf_utils.sh \
 	destroy \
 	infra/projects \
  	${DEPLOYMENT_PROJECT_NUMBER})
+ 	$(call run, gcloud projects delete ${PROJECT_NUMBER})
 
-triggers:init auth ## Build CICD triggers against your GitHub Repo
+triggers: ## Build CICD triggers against your GitHub Repo
 	$(suppress_output)sed -i '' "s/TF_VAR_location/${TF_VAR_location}/g" $(PWD)/cloudbuild/pre-merge.yaml
 	$(suppress_output)sed -i '' "s/TF_VAR_location/${TF_VAR_location}/g" $(PWD)/cloudbuild/on-merge.yaml
 	$(call run, bash /workspace_stg/infra/tf_utils.sh \
@@ -78,7 +79,7 @@ triggers:init auth ## Build CICD triggers against your GitHub Repo
 	infra/triggers \
 	${DEPLOYMENT_PROJECT_NUMBER})
 
-del-triggers:init auth ## Destroy your Build Triggers
+del-triggers: ## Destroy your Build Triggers
 	$(suppress_output)sed -i '' "s/TF_VAR_location/${TF_VAR_location}/g" $(PWD)/cloudbuild/pre-merge.yaml
 	$(suppress_output)sed -i '' "s/TF_VAR_location/${TF_VAR_location}/g" $(PWD)/cloudbuild/on-merge.yaml
 	$(call run, bash /workspace_stg/infra/tf_utils.sh \
