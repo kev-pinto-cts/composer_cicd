@@ -49,6 +49,7 @@ bootstrap:init ## Creates a Bucket to Store Terraform State -- Do this FIRST !! 
 	$(call run, gcloud services enable cloudbuild.googleapis.com)
 	$(suppress_output)echo "Enabling Cloud Billing API...."
 	$(call run, gcloud services enable cloudbilling.googleapis.com)
+	$(call run, gcloud services enable container.googleapis.com)
 	$(suppress_output)echo "Creating Terraform State Bucket ${TF_VAR_tfstate_bucket}...."
 	#$(call run, gsutil mb -c standard -l ${TF_VAR_location} -p ${TF_VAR_deployment_project} gs://${TF_VAR_tfstate_bucket})
 

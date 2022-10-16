@@ -8,7 +8,7 @@ pwd
 echo "BRANCH=${BRANCH} COMMIT_SHA=${SHORT_SHA} -- LOCATION--${LOCATION}"
 
 
-project_to_branch_map=($(cat ./config/env_mapper.txt))
+project_to_branch_map=($(cat /workspace/config/env_mapper.txt))
 for mapping in ${project_to_branch_map[@]}; do
   project_id=$(echo ${mapping} | cut -d"~" -f1)
   dag_bucket=$(echo ${mapping} | cut -d"~" -f2 | sed "s/\/dags//g")
