@@ -5,7 +5,9 @@ steps:
   entrypoint: 'bash'
   args:
     - |
-      /workspace/cloudbuild/run_integration_tests.sh $_BASE_BRANCH $SHORT_SHA $_COMPOSER_LOCATION
+      pwd
+      ls -l
+      ./run_integration_tests.sh $_BASE_BRANCH $SHORT_SHA $_COMPOSER_LOCATION
 options:
   dynamic_substitutions: true
 substitutions:
