@@ -4,7 +4,9 @@ BRANCH=$1
 SHORT_SHA=$2
 LOCATION=$3
 
-echo "BRANCH=${BRANCH} COMMIT_SHA=${SHORT_SHA}"
+pwd
+echo "BRANCH=${BRANCH} COMMIT_SHA=${SHORT_SHA} -- LOCATION--${LOCATION}"
+
 
 project_to_branch_map=($(cat ./config/env_mapper.txt))
 for mapping in ${project_to_branch_map[@]}; do

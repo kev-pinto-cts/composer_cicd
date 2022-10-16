@@ -1,60 +1,12 @@
 steps:
-- id: 'branch-name'
-  name: 'alpine'
-  waitFor: [ '-' ]
-  entrypoint: 'sh'
-  args:
-    - '-c'
-    - |
-      echo  echo "*****************************DAG CICD - BRANCH:$BRANCH_NAME*******************************************************"
-      echo "HEAD BRANCH_NAME: $_HEAD_BRANCH -- BASE BRANCH_NAME:$_BASE_BRANCH -- SHORT_SHA - ${SHORT_SHA} PROJECT_ID: $PROJECT_ID"
-      echo "***********************************************************************************************************************"
-
-- id: 'build-test-container'
-  name: 'gcr.io/kaniko-project/executor:latest'
-  waitFor: [ '-' ]
-  args:
-    - --dockerfile=./cloudbuild/Dockerfile
-    - --destination=${_COMPOSER_LOCATION}-docker.pkg.dev/${PROJECT_ID}/airflow-test-container/cicd
-    - --cache=true
-    - --cache-ttl=240h
-
-- id: 'lint'
-  name: '${_COMPOSER_LOCATION}-docker.pkg.dev/${PROJECT_ID}/airflow-test-container/cicd:latest'
-  waitFor: [ 'build-test-container' ]
-  entrypoint: 'sh'
-  args:
-    - '-c'
-    - |
-      flake8
-
-- id: 'pre-commit-checks'
-  name: '${_COMPOSER_LOCATION}-docker.pkg.dev/${PROJECT_ID}/airflow-test-container/cicd:latest'
-  waitFor: [ 'build-test-container' ]
-  entrypoint: 'sh'
-  args:
-    - '-c'
-    - |
-      pre-commit run --all-files
-
-- id: 'run-unit-test'
-  name: '${_COMPOSER_LOCATION}-docker.pkg.dev/${PROJECT_ID}/airflow-test-container/cicd:latest'
-  waitFor: [ 'build-test-container' ]
-  entrypoint: 'sh'
-  args:
-    - '-c'
-    - |
-      pytest /workspace/tests
-
 - id: 'run-int-test'
-  name: '${_COMPOSER_LOCATION}-docker.pkg.dev/${PROJECT_ID}/airflow-test-container/cicd:latest'
+  name: 'gcr.io/$PROJECT_ID/gcloud'
   waitFor: [ 'build-test-container','run-unit-test' ]
-  entrypoint: 'bash'
+  entrypoint: 'sh'
   args:
-    - cloudbuild/run_integration_tests.sh
-    - $BRANCH_NAME
-    - $SHORT_SHA
-    - $_COMPOSER_LOCATION
+    - '-c'
+    - |
+      cat /config/env_mapper.txt
 options:
   dynamic_substitutions: true
 substitutions:
