@@ -6,7 +6,7 @@ steps:
   args:
   - '-c'
   - |
-    ./run_integration_tests.sh $_BASE_BRANCH $SHORT_SHA $_COMPOSER_LOCATION
+    ./run_integration_tests.sh $_BASE_BRANCH $SHORT_SHA $_COMPOSER_LOCATION || exit 1
 options:
   dynamic_substitutions: true
 substitutions:
