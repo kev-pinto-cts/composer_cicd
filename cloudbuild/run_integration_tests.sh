@@ -5,7 +5,7 @@ SHORT_SHA=$2
 LOCATION=$3
 
 echo "BRANCH=${BRANCH} COMMIT_SHA=${SHORT_SHA} -- LOCATION--${LOCATION}"
-gcloud components install gke-gcloud-auth-plugin
+gcloud components install gke-gcloud-auth-plugin --quiet
 
 project_to_branch_map=($(cat /workspace/config/env_mapper.txt))
 for mapping in ${project_to_branch_map[@]}; do

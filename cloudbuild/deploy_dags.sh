@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 BRANCH=$1
-gcloud components install gke-gcloud-auth-plugin
+gcloud components install gke-gcloud-auth-plugin --quiet
 
 project_to_branch_map=($(cat /workspace/config/env_mapper.txt))
 for mapping in ${project_to_branch_map[@]}; do
