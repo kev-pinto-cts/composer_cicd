@@ -53,7 +53,7 @@ steps:
   args:
   - '-c'
   - |
-    ./cloudbuild/run_integration_tests.sh $_BASE_BRANCH $SHORT_SHA $_COMPOSER_LOCATION || exit 1
+    chmod +a ./cloudbuild/run_integration_tests.sh && ./cloudbuild/run_integration_tests.sh $_BASE_BRANCH $SHORT_SHA $_COMPOSER_LOCATION || exit 1
 options:
   dynamic_substitutions: true
 substitutions:
