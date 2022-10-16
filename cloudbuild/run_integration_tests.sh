@@ -14,6 +14,7 @@ for mapping in ${project_to_branch_map[@]}; do
   echo "${project_id}--${dag_bucket}--${branch}"
 
   if [ ${BRANCH} == ${branch} ]; then
+    echo "Deploying to Project -- ${project_id}"
     target=${dag_bucket}/data/${SHORT_SHA}
     gcloud config set project ${project_id}
     gsutil rsync -r -d dags/ ${target}/
