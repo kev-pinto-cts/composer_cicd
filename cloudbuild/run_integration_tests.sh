@@ -22,6 +22,6 @@ for mapping in ${project_to_branch_map[@]}; do
     gcloud config list
     echo "gcloud composer environments run ${project_id} --location ${LOCATION} dags list -- --subdir /home/airflow/gcs/data/${SHORT_SHA}/"
     gcloud composer environments run ${project_id} --location ${LOCATION} dags list -- --subdir /home/airflow/gcs/data/${SHORT_SHA}/
-    gsutil rm -rf ${target}
+    gsutil -m rm -rf ${target}
   fi
 done

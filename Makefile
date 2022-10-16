@@ -69,7 +69,6 @@ del-projects: ## Drops the Dev, Test and Prod Projects
 	destroy \
 	infra/projects \
  	${DEPLOYMENT_PROJECT_NUMBER})
- 	$(suppress_output)echo "Deleting Deployment Project"
  	$(call run, gcloud projects delete ${PROJECT_NUMBER})
 
 triggers: ## Build CICD triggers against your GitHub Repo
