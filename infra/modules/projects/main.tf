@@ -104,7 +104,7 @@ resource "null_resource" "create_env_mappers" {
     always_run = timestamp()
   }
   provisioner "local-exec" {
-    command = "echo ${each.value.name}:${google_composer_environment.composer2[each.key].config.0.dag_gcs_prefix} >> /config/env_mapper.txt"
+    command = "echo ${each.value.name}~${google_composer_environment.composer2[each.key].config.0.dag_gcs_prefix} >> /config/env_mapper.txt"
   }
   depends_on = [null_resource.del_env_mappers]
 }
