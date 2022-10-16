@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+# Config
 BRANCH=$1
 SHORT_SHA=$2
 LOCATION=$3
