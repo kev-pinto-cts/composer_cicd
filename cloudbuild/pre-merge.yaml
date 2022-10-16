@@ -6,13 +6,8 @@ steps:
   args:
     - '-c'
     - |
-      project_to_branch_map=$(cat ./config/env_mapper.txt)
-      for mapping in ${project_to_branch_map[@]}; do
-        project_id=$(echo ${mapping} | cut -d":" -f1)
-        dag_bucket=$(echo ${mapping} | cut -d":" -f2)
-        branch=$(echo ${mapping} | cut -d":" -f3)
-        echo "${project_id}--${dag_bucket}--${brach}"
-      done
+      project_to_branch_map=($(cat ./config/env_mapper.txt))
+      echo ${project_to_branch_map}
 options:
   dynamic_substitutions: true
 substitutions:
