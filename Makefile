@@ -36,7 +36,7 @@ init: ## This will build the Local Dev Container
 	$(suppress_output)gcloud components update
 	$(suppress_output)docker build . -t ${BUILD_CONTAINER}:${BUILD_CONTAINER_TAG} -f cloudbuild/Dockerfile
 
-bootstrap:init auth## Creates a Deployment Project and Bucket to Store Terraform State -- Do this FIRST !! -- Also, Run this once only
+bootstrap: auth## Creates a Deployment Project and Bucket to Store Terraform State -- Do this FIRST !! -- Also, Run this once only
 	$(suppress_output)echo "Creating Deployment Project ${TF_VAR_deployment_project}"
 	#$(suppress_output)gcloud projects create ${TF_VAR_deployment_project} --folder=${TF_VAR_folder}
 	$(suppress_output)gcloud beta billing projects link ${TF_VAR_deployment_project} --billing-account=${TF_VAR_billing_account}
