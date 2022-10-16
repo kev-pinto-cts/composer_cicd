@@ -16,7 +16,7 @@ steps:
   args:
   - '-c'
   - |
-    ./cloudbuild/deploy_dags.sh $_BASE_BRANCH $SHORT_SHA $_COMPOSER_LOCATION || exit 1
+    ./cloudbuild/deploy_dags.sh $BRANCH_NAME || exit 1
 options:
   dynamic_substitutions: true
 substitutions:
