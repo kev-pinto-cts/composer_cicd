@@ -1,6 +1,6 @@
 steps:
 - id: 'run-int-test'
-  name: 'gcr.io/$PROJECT_ID/gcloud'
+  name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
   waitFor: [ '-' ]
   entrypoint: 'sh'
   args:
