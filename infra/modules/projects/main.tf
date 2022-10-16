@@ -59,6 +59,7 @@ resource "google_project_iam_member" "cloudbuildiam" {
   depends_on = [google_project.my_project-in-a-folder, google_project_service.project]
 }
 
+# This Role is for the Ingerity Testing during the the pre-merge phase
 resource "google_project_iam_member" "cloudbuildiamworker" {
   for_each   = { for project in local.projects : project.name => project }
   project    = each.value.name
